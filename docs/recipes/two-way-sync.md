@@ -74,4 +74,4 @@ Section::make('Location')
 5. **`live()` & `afterStateUpdated`**: This is the glue. When `Geocomplete` updates the hidden `longitude`, this hook fires and explicitly updates the `location` state of the Map field, ensuring the map center/marker moves to the new coordinates server-side (and then client-side).
 
 ## Filament v4 Note
-Ensure your views are using the correct state path format (replacing `form.` with `data.` if necessary). This package includes fixs for this, but custom implementations should be aware.
+Ensure your views are using the correct state path format (replacing `form.` with `data.` if necessary). This package includes fixes for this, but custom implementations should be aware.
