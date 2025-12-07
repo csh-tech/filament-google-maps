@@ -10,9 +10,11 @@
         x-data="filamentGoogleMapsField({
                     state: $wire.entangle('{{ $getStatePath() }}'),
                     setStateUsing: (path, state) => {
+                        path = path.replace(/^form/, 'data')
                         return $wire.set(path, state)
                     },
                     getStateUsing: (path) => {
+                        path = path.replace(/^form/, 'data')
                         return $wire.get(path)
                     },
                     reverseGeocodeUsing: (results) => {
