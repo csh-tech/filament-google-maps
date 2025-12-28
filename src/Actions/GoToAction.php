@@ -2,8 +2,8 @@
 
 namespace Cheesegrits\FilamentGoogleMaps\Actions;
 
-use Filament\Actions\Action;
 use Closure;
+use Filament\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 
@@ -40,18 +40,16 @@ class GoToAction extends Action
 
         $this->icon($this->getIcon() ?? 'heroicon-s-map');
 
-        $this->extraAttributes(function (Model $record) {
+        $this->alpineClickHandler(function (Model $record) {
             $latLngFields = $record::getLatLngAttributes();
 
-            return [
-                'x-on:click' => new HtmlString(
-                    sprintf("\$dispatch('filament-google-maps::widget/setMapCenter', {lat: %f, lng: %f, zoom: %d})",
-                        round(floatval($record->{$latLngFields['lat']}), 8),
-                        round(floatval($record->{$latLngFields['lng']}), 8),
-                        $this->getZoom()
-                    )
-                ),
-            ];
+            return new HtmlString(
+                sprintf("\$dispatch('filament-google-maps::widget/setMapCenter', {lat: %f, lng: %f, zoom: %d})",
+                    round(floatval($record->{$latLngFields['lat']}), 8),
+                    round(floatval($record->{$latLngFields['lng']}), 8),
+                    $this->getZoom()
+                )
+            );
         });
     }
 }

@@ -11,15 +11,20 @@ either as part of an admin panel, or in standalone front end forms, tables and d
 
 ## About The Project
 
-### Filament v3 release
+### Filament v4 release
 
-This is the v3 branch, compatible with the recent Filament v3 release.  At some point soon we will replace
-the main branch (currently the Filament v2 compatible branch) with this v3 branch, and move Filament v2 support to
-a v2 branch.
-
+This is the v4 branch, only compatible with Filament v4.  If you need the v3 branch, please use the [v3 branch](https://github.com/cheesegrits/filament-google-maps/tree/v3).
 Please report any you find either on the [GitHub Issues](https://github.com/cheesegrits/filament-google-maps/issues) page,
 or find me (@cheesegrits) on the [Filament Discord server](https://filamentphp.com/discord).
 
+### Changes from v3
+
+Most of the changes are under the hood and should not break backward compatibility.
+
+The only breaking change is that the drawing features, using the google.maps.drawing library, have been removed.
+Google has deprecated this library and will remove it entirely in May 2026.  These features were WIP and undocumented,
+so hopefully very few people are affected by this.
+ 
 ### API Usage
 
 **IMPORTANT NOTE** - some features of this package could potentially drive up your
@@ -34,7 +39,7 @@ We are not liable if you get a surprise bill!
 If you just can't handle reading documentation and want to dive right in ...
 
 ```sh
-composer require cheesegrits/filament-google-maps "^3.0"
+composer require cheesegrits/filament-google-maps "^4.0"
 ```
 
 ... then follow these instructions to add a computed attribute to any  model(s) that will use these components (which
@@ -49,7 +54,7 @@ php artisan filament-google-maps:model-code
 ```php
 use Cheesegrits\FilamentGoogleMaps\Fields\Map
 ...
-->schema[
+->components[
     ...
     // must use the computed attribute name you used on your model
     // which must NOT exist on the table itself
@@ -136,7 +141,7 @@ a combination of address fields into lat lng, or reverse geocoding lat and lng t
 
 ### Prerequisites
 
-This package is built on Filament V2, and Laravel 9.  It may run on earlier versions of
+This package is built on Filament V4, and Laravel 12.  It may run on earlier versions of
 Laravel, but has not been tested.
 
 ### Installation
@@ -144,7 +149,7 @@ Laravel, but has not been tested.
 You can install this project via composer:
 
 ```sh
-composer install cheesegrits/filament-google-maps
+composer install cheesegrits/filament-google-maps "^4.0"
 ```
 
 ### Assets
@@ -586,6 +591,12 @@ to keep your API usage to a minimum.
 The Geocomplete field turns a field on your form into a Google Geocomplete field.  You
 would usually use this **instead of** a Map field (if you want a geocomplete field together
 with a map, you would typically use the autocomplete() feature on the Map field).
+
+NOTE - when using the GeoComplete field, you will see deprecation warnings in the browser console.  This is because
+Google are replacing the Autocomplete API with the new PlaceAutoCompleteElement HTML element.  Unfortunately, this new
+element does not support adding autocompletion to an existing form field, which makes integration with frameworks /
+libraries like Filament much more difficult.  See the [this issue](https://issuetracker.google.com/issues/399061524)
+for more details.  We are working on a workaround, but for now you will see deprecation warnings.
 
 The Geocomplete field can operate in one of two modes.  Either independently, where you
 simply use it with a normal text field on your form, e.g. 'full_address', and this component
@@ -1366,7 +1377,7 @@ of the features provided by this package.
 - [x] Add KML layers to field and widgets
 - [x] Add more geocoding options for form fields, for individual address components (street, city, zip, etc)
 - [ ] Improve reverse geocoding format grammar, like alternates ... %A3|%A2 (is %A3 empty, try %A2), etc
-- [ ] Write test suite
+- [x] Write test suite
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

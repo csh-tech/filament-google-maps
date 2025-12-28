@@ -35,6 +35,14 @@
                 ->class(['overflow-hidden'])
         "
     >
+
+{{--        <script>--}}
+{{--            (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({--}}
+{{--                key: "{{ \Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper::mapsKey() }}",--}}
+{{--                v: "weekly",--}}
+{{--            });--}}
+{{--        </script>--}}
+        
         <div
             class="w-full"
             x-ignore
@@ -42,7 +50,6 @@
             x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('filament-google-maps-geocomplete', 'cheesegrits/filament-google-maps') }}"
             x-data="filamentGoogleGeocomplete({
                         setStateUsing: async (path, state) => {
-                            path = path.replace(/^form/, 'data')
                             return await $wire.set(path, state)
                         },
                         reverseGeocodeUsing: (results) => {
@@ -58,8 +65,9 @@
                         placeField: @js($getPlaceField()),
                         countries: @js($getCountries()),
                         debug: @js($getDebug()),
-                        gmaps: @js($getMapsUrl()),
+                        apiKey: @js(\Cheesegrits\FilamentGoogleMaps\Helpers\MapsHelper::mapsKey()),
                         minChars: @js($getMinChars()),
+                        fieldId: @js($id),
                     })"
             wire:ignore
         >
@@ -108,7 +116,7 @@
                             'autocomplete'                                                          => $getAutocomplete(),
                             'autofocus'                                                             => $isAutofocused(),
                             'disabled'                                                              => $isDisabled,
-                            'id'                                                                    => $getStatePath(),
+                            'id'                                                                    => $id,
                             'inlinePrefix'                                                          => $isPrefixInline && (count($prefixActions) || $prefixIcon || filled($prefixLabel)),
                             'inlineSuffix'                                                          => $isSuffixInline && (count($suffixActions) || $suffixIcon || filled($suffixLabel)),
                             'inputmode'                                                             => $getInputMode(),
@@ -134,7 +142,7 @@
                 <input
                     {{ $applyStateBindingModifiers('wire:model') }}="{{ $getStatePath() }}"
                     type="hidden"
-                    id="{{ $getStatePath() }}"
+                    id="{{ $getId() }}"
                 />
             @endif
         </div>
