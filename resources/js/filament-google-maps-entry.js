@@ -2,6 +2,7 @@ import { setOptions, importLibrary } from "@googlemaps/js-api-loader";
 
 export default function filamentGoogleMapsField(
     {
+        apiKey,
         state,
         defaultLocation,
         controls,
@@ -11,12 +12,13 @@ export default function filamentGoogleMapsField(
         geoJson,
         geoJsonVisible,
         statePath,
+        gmaps,
     }) {
     let map = null
     let marker = null
     let layers = null
     let geoJsonDataLayer = null
-    
+
     const symbols = {
         "%n": ["street_number"],
         "%z": ["postal_code"],
@@ -48,19 +50,29 @@ export default function filamentGoogleMapsField(
         },
 
         async createMap() {
+            if (!apiKey && gmaps) {
+                try {
+                    const url = new URL(gmaps, window.location.origin);
+                    apiKey = url.searchParams.get('key');
+                } catch (e) {
+                    // ignore
+                }
+            }
+
+            if (!apiKey) {
+                throw new Error("Filament Google Maps (MapEntry): apiKey is missing or empty.");
+            }
+
             setOptions({ key: apiKey })
             const {Map} = await importLibrary("maps");
-            const {PlacesService} = await importLibrary("places");
-            const {AdvancedMarkerElement} = await importLibrary("marker");
 
             map = new Map(mapEl, {
-                mapId: statePath,
                 center: this.getCoordinates(),
                 zoom: defaultZoom,
                 ...controls,
             });
 
-            marker = new AdvancedMarkerElement({
+            marker = new google.maps.Marker({
                 map: map,
                 position: this.getCoordinates(),
             });
