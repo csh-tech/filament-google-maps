@@ -15,9 +15,9 @@ export default function filamentGoogleMapsField(
         clickable,
         defaultLocation,
         statePath,
-        controls,
+        controls = {},
         kmlLayers,
-        reverseGeocodeFields,
+        reverseGeocodeFields = {},
         defaultZoom,
         types,
         countries,
@@ -66,7 +66,7 @@ export default function filamentGoogleMapsField(
     let geoJsonDataLayer = null
     let placesService = null
     let placeFields = []
-    
+
     return {
         state,
         // map: null,
